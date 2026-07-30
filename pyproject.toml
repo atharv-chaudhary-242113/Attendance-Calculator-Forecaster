@@ -11,3 +11,53 @@ dependencies = [
     "requests>=2.32.5",
     "scikit-learn>=1.8.0",
 ]
+
+[dependency-groups]
+dev = [
+    "pyrefly>=1.1.1",
+    "ruff>=0.16.1",
+]
+
+
+# ------- Ruff (Linting & Formatting) -------
+[tool.ruff]
+line-length = 88
+target-version = "py312"
+src = ["bom", "tests"]
+
+[tool.ruff.lint]
+select = [
+    "ANN",
+    "B",
+    "C4",
+    "E",
+    "F",
+    "I",
+    "N",
+    "SIM",
+    "UP",
+    "W"
+]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["D", "S101", "ANN"]
+
+[tool.ruff.format]
+docstring-code-format = true
+
+
+# ------- Pytest -------
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
+
+[tool.pyrefly]
+search-path = ["."]
+python-version = "3.12.0"
+preset = "strict"
+
+[tool.pyrefly.errors]
+redundant-cast = "warn"
