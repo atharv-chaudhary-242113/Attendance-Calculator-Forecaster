@@ -1,15 +1,15 @@
 [project]
 name = "attendance"
 version = "0.1.0"
-description = "Add your description here"
+description = "An app for calculating, forecasting, and planning your attendance."
 readme = "README.md"
-requires-python = ">=3.14"
+requires-python = ">=3.13,<3.14"
 dependencies = [
-    "numpy>=2.4.2",
-    "pandas>=3.0.0",
-    "pyqt6>=6.10.2",
-    "requests>=2.32.5",
-    "scikit-learn>=1.8.0",
+    "numpy==2.5.1",
+    "pandas==3.0.5",
+    "pyqt6==6.11.0",
+    "requests==2.34.2",
+    "scikit-learn==1.9.0",
 ]
 
 [dependency-groups]
@@ -23,7 +23,6 @@ dev = [
 [tool.ruff]
 line-length = 88
 target-version = "py312"
-src = ["bom", "tests"]
 
 [tool.ruff.lint]
 select = [

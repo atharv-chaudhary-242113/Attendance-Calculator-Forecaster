@@ -1,14 +1,32 @@
 import sys
 from datetime import date, timedelta
-from PyQt6.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout,
-                             QHBoxLayout, QPushButton, QLabel, QFileDialog,
-                             QCalendarWidget, QFrame, QStackedWidget,
-                             QSpinBox, QComboBox, QDateEdit, QTableWidget,
-                             QTableWidgetItem, QHeaderView, QProgressBar, QScrollArea, QMessageBox, QTabWidget)
-from PyQt6.QtCore import Qt, QDate
-from PyQt6.QtGui import QColor
 
 from backend.attendance_backend import AttendanceBrain
+from PyQt6.QtCore import QDate, Qt
+from PyQt6.QtGui import QColor
+from PyQt6.QtWidgets import (
+    QApplication,
+    QCalendarWidget,
+    QComboBox,
+    QDateEdit,
+    QFileDialog,
+    QFrame,
+    QHBoxLayout,
+    QHeaderView,
+    QLabel,
+    QMainWindow,
+    QMessageBox,
+    QProgressBar,
+    QPushButton,
+    QScrollArea,
+    QSpinBox,
+    QStackedWidget,
+    QTableWidget,
+    QTableWidgetItem,
+    QTabWidget,
+    QVBoxLayout,
+    QWidget,
+)
 
 STYLESHEET = """
 QMainWindow { background-color: #000000; }
@@ -39,7 +57,9 @@ class DateHeatmap(QCalendarWidget):
         super().__init__()
         self.brain = brain
         self.setGridVisible(False)
-        self.setVerticalHeaderFormat(QCalendarWidget.VerticalHeaderFormat.NoVerticalHeader)
+        self.setVerticalHeaderFormat(
+            QCalendarWidget.VerticalHeaderFormat.NoVerticalHeader
+        )
 
     def paintCell(self, painter, rect, date):
         super().paintCell(painter, rect, date)
@@ -74,7 +94,8 @@ class TimetableHeatmap(QTableWidget):
             all_times.update(slots.keys())
 
         sorted_times = sorted(list(all_times))
-        if not sorted_times: return  # No data yet
+        if not sorted_times:
+            return  # No data yet
 
         self.setRowCount(len(sorted_times))
         self.setVerticalHeaderLabels(sorted_times)
@@ -188,7 +209,9 @@ class MainWindow(QMainWindow):
         header.addWidget(l_ov)
         header.addStretch()
         self.badge_pct = QLabel("Waiting...")
-        self.badge_pct.setStyleSheet("background: #111; color: #666; padding: 5px 15px; border-radius: 15px;")
+        self.badge_pct.setStyleSheet(
+            "background: #111; color: #666; padding: 5px 15px; border-radius: 15px;"
+        )
         header.addWidget(self.badge_pct)
         layout.addLayout(header)
 
@@ -288,7 +311,10 @@ class MainWindow(QMainWindow):
         self.combo_start = QComboBox()
         self.combo_start.addItems(["Start Today", "Custom Date"])
         self.combo_start.currentIndexChanged.connect(
-            lambda: self.date_edit_start.setVisible(self.combo_start.currentIndex() == 1))
+            lambda: self.date_edit_start.setVisible(
+                self.combo_start.currentIndex() == 1
+            )
+        )
         self.date_edit_start = QDateEdit()
         self.date_edit_start.setCalendarPopup(True)
         self.date_edit_start.setDate(QDate.currentDate())
@@ -306,7 +332,8 @@ class MainWindow(QMainWindow):
         self.combo_end = QComboBox()
         self.combo_end.addItems(["6 Months", "Semester End (Auto)", "Custom Date"])
         self.combo_end.currentIndexChanged.connect(
-            lambda: self.date_edit_end.setVisible(self.combo_end.currentIndex() == 2))
+            lambda: self.date_edit_end.setVisible(self.combo_end.currentIndex() == 2)
+        )
         self.date_edit_end = QDateEdit()
         self.date_edit_end.setCalendarPopup(True)
         self.date_edit_end.setDate(QDate.currentDate().addMonths(6))
@@ -343,7 +370,9 @@ class MainWindow(QMainWindow):
         self.sched_table = QTableWidget()
         self.sched_table.setColumnCount(4)
         self.sched_table.setHorizontalHeaderLabels(["Date", "Day", "Time", "Subject"])
-        self.sched_table.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
+        self.sched_table.horizontalHeader().setSectionResizeMode(
+            QHeaderView.ResizeMode.Stretch
+        )
         self.sched_table.verticalHeader().setVisible(False)
         self.sched_table.setShowGrid(False)
         table_lay.addWidget(self.sched_table)
@@ -359,7 +388,8 @@ class MainWindow(QMainWindow):
         v = QLabel(val)
         v.setObjectName("StatValue")
         v.setWordWrap(True)
-        if wide: v.setStyleSheet("font-size: 24px; color: white;")
+        if wide:
+            v.setStyleSheet("font-size: 24px; color: white;")
         l.addWidget(v)
         return w
 
@@ -373,25 +403,35 @@ class MainWindow(QMainWindow):
                 self.time_view.update_data(self.brain)  # Refresh view
 
     def load_absence_details(self):
-        path, _ = QFileDialog.getOpenFileName(self, "Absence Details", "", "CSV (*.csv)")
+        path, _ = QFileDialog.getOpenFileName(
+            self, "Absence Details", "", "CSV (*.csv)"
+        )
         if path:
             ok, msg = self.brain.load_absence_details(path)
             self.lbl_status.setText(msg)
             if ok:
-                self.btn_daily.setStyleSheet("border: 1px solid #0070F3; color: #0070F3;")
+                self.btn_daily.setStyleSheet(
+                    "border: 1px solid #0070F3; color: #0070F3;"
+                )
                 self.cal_view.updateCell(QDate.currentDate())
                 self.time_view.update_data(self.brain)  # Refresh view
                 self.refresh_dashboard_widgets()
 
     def load_summary(self):
-        path, _ = QFileDialog.getOpenFileName(self, "Attendance Details", "", "CSV (*.csv)")
+        path, _ = QFileDialog.getOpenFileName(
+            self, "Attendance Details", "", "CSV (*.csv)"
+        )
         if path:
             ok, msg = self.brain.parse_attendance_summary(path)
             self.lbl_status.setText(msg)
             if ok:
-                self.btn_summary.setStyleSheet("border: 1px solid #0070F3; color: #0070F3;")
+                self.btn_summary.setStyleSheet(
+                    "border: 1px solid #0070F3; color: #0070F3;"
+                )
                 self.btn_auto.setVisible(True)
-                self.btn_auto.setText(f"⚡ AUTO FILL ({self.brain.auto_total} / {self.brain.auto_absent})")
+                self.btn_auto.setText(
+                    f"⚡ AUTO FILL ({self.brain.auto_total} / {self.brain.auto_absent})"
+                )
                 self.refresh_dashboard_widgets()
 
     def refresh_dashboard_widgets(self):
@@ -409,7 +449,11 @@ class MainWindow(QMainWindow):
             header.addWidget(QLabel(subj, styleSheet="font-weight: bold;"))
             header.addStretch()
             header.addWidget(
-                QLabel("High Absence" if score > 0.5 else "Moderate", styleSheet="color:#666; font-size:11px;"))
+                QLabel(
+                    "High Absence" if score > 0.5 else "Moderate",
+                    styleSheet="color:#666; font-size:11px;",
+                )
+            )
             l.addLayout(header)
             bar = QProgressBar()
             bar.setValue(int(score * 100))
@@ -437,7 +481,8 @@ class MainWindow(QMainWindow):
             absent = self.spin_absent.value()
             target = self.spin_target.value()
             start = date.today()
-            if self.combo_start.currentIndex() == 1: start = self.date_edit_start.date().toPyDate()
+            if self.combo_start.currentIndex() == 1:
+                start = self.date_edit_start.date().toPyDate()
 
             mode = self.combo_end.currentIndex()
             if mode == 0:
@@ -449,56 +494,73 @@ class MainWindow(QMainWindow):
 
             res = self.brain.calculate_recovery_plan(target, tot, absent, start, limit)
 
-            if tot > 0: self.badge_pct.setText(f"CURRENT: {res['current_pct']:.1f}%")
+            if tot > 0:
+                self.badge_pct.setText(f"CURRENT: {res['current_pct']:.1f}%")
 
             act_lbl = self.res_action.findChild(QLabel, "StatValue")
             time_lbl = self.res_timeline.findChild(QLabel, "StatValue")
             self.sched_table.setRowCount(0)
 
-            if res['status'] == 'impossible':
+            if res["status"] == "impossible":
                 act_lbl.setText("Impossible Target")
                 time_lbl.setText("Mathematics check failed")
-            elif res['status'] == 'no_classes_found':
+            elif res["status"] == "no_classes_found":
                 act_lbl.setText("No Classes Found")
                 time_lbl.setText("Timetable mismatch/empty")
-            elif res['status'] == 'impossible_timeframe':
-                max_p = res.get('max_possible', 0)
-                end_str = res['end_date'].strftime('%d %b %Y')
+            elif res["status"] == "impossible_timeframe":
+                max_p = res.get("max_possible", 0)
+                end_str = res["end_date"].strftime("%d %b %Y")
                 act_lbl.setText(f"IMPOSSIBLE BY {end_str}")
                 time_lbl.setText(f"Max Possible: {max_p:.1f}%")
-                if 'schedule' in res:
-                    for item in res['schedule']:
+                if "schedule" in res:
+                    for item in res["schedule"]:
                         row = self.sched_table.rowCount()
                         self.sched_table.insertRow(row)
-                        self.sched_table.setItem(row, 0, QTableWidgetItem(item['Date'].strftime("%d-%m")))
-                        self.sched_table.setItem(row, 1, QTableWidgetItem(item['Day']))
-                        self.sched_table.setItem(row, 2, QTableWidgetItem(item['Time']))
-                        self.sched_table.setItem(row, 3, QTableWidgetItem(item['Subject']))
+                        self.sched_table.setItem(
+                            row, 0, QTableWidgetItem(item["Date"].strftime("%d-%m"))
+                        )
+                        self.sched_table.setItem(row, 1, QTableWidgetItem(item["Day"]))
+                        self.sched_table.setItem(row, 2, QTableWidgetItem(item["Time"]))
+                        self.sched_table.setItem(
+                            row, 3, QTableWidgetItem(item["Subject"])
+                        )
 
-            elif res['status'] == 'surplus':
+            elif res["status"] == "surplus":
                 act_lbl.setText(f"SAFE: Skip {res['classes_skippable']}")
                 time_lbl.setText("Target Met")
-            elif res['status'] == 'deficit':
+            elif res["status"] == "deficit":
                 act_lbl.setText(f"ATTEND {res['classes_needed']} CLASSES")
-                if 'days_needed' in res:
-                    end_str = res['end_date'].strftime('%d %b %Y')
+                if "days_needed" in res:
+                    end_str = res["end_date"].strftime("%d %b %Y")
                     time_lbl.setText(f"{res['days_needed']} Days\nUntil {end_str}")
-                    if 'schedule' in res:
-                        for item in res['schedule']:
+                    if "schedule" in res:
+                        for item in res["schedule"]:
                             row = self.sched_table.rowCount()
                             self.sched_table.insertRow(row)
-                            self.sched_table.setItem(row, 0, QTableWidgetItem(item['Date'].strftime("%d-%m")))
-                            self.sched_table.setItem(row, 1, QTableWidgetItem(item['Day']))
-                            self.sched_table.setItem(row, 2, QTableWidgetItem(item['Time']))
-                            self.sched_table.setItem(row, 3, QTableWidgetItem(item['Subject']))
+                            self.sched_table.setItem(
+                                row, 0, QTableWidgetItem(item["Date"].strftime("%d-%m"))
+                            )
+                            self.sched_table.setItem(
+                                row, 1, QTableWidgetItem(item["Day"])
+                            )
+                            self.sched_table.setItem(
+                                row, 2, QTableWidgetItem(item["Time"])
+                            )
+                            self.sched_table.setItem(
+                                row, 3, QTableWidgetItem(item["Subject"])
+                            )
                 else:
                     time_lbl.setText("Load Timetable")
         except Exception as e:
             QMessageBox.critical(self, "Calc Error", str(e))
 
 
-if __name__ == "__main__":
+def main() -> int:
     app = QApplication(sys.argv)
     window = MainWindow()
     window.show()
-    sys.exit(app.exec())
+    return app.exec()
+
+
+if __name__ == "__main__":
+    sys.exit(main())

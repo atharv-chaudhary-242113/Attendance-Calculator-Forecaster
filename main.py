@@ -1,4 +1,5 @@
-import os
+from frontend.attendance_gui import main
+
 
 if __name__ == "__main__":
-    os.system("python frontend/attendance_gui.py")
+    main()

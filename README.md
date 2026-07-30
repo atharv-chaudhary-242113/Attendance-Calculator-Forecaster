@@ -26,7 +26,7 @@ An advanced, Python-based analytical tool designed to track academic attendance,
 
 ## **Technology Stack**
 
-* **Language:** Python 3.14+
+* **Language:** Python 3.13
 * **GUI Framework:** PyQt6
 * **Data Analysis:** Pandas, NumPy
 * **Machine Learning:** Scikit-learn
@@ -40,8 +40,7 @@ An advanced, Python-based analytical tool designed to track academic attendance,
 1. Ensure you have Python installed.
 2. Install dependencies:
 ```bash
-pip install numpy pandas pyqt6 scikit-learn
-
+uv sync --no-dev
 ```
 
 
@@ -51,8 +50,7 @@ pip install numpy pandas pyqt6 scikit-learn
 Run the entry-point script to launch the application:
 
 ```bash
-python main.py
-
+uv run python main.py
 ```
 
 ---
