@@ -55,7 +55,7 @@ addopts = "-ra"
 
 [tool.pyrefly]
 search-path = ["."]
-python-version = "3.12.0"
+python-version = "3.13"
 preset = "strict"
 
 [tool.pyrefly.errors]
